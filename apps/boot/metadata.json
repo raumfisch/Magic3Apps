@@ -11,8 +11,8 @@
     {"name":".boot0","url":"boot0.js", "supports": ["BANGLEJS", "BANGLEJS2"]},
     {"name":".bootcde","url":"bootloader.js", "supports": ["BANGLEJS", "BANGLEJS2"]},
     {"name":"bootupdate.js","url":"bootupdate.js", "supports": ["BANGLEJS", "BANGLEJS2"]},
-    {"name": ".boot0", "url": "magic3/boot0.js", "supports": ["Magic3"]},
-    {"name":".bootcde","url":"magic3/bootloader.js", "supports": ["Magic3"]}
+    {"name": ".boot0", "url": "magic3/boot0.ts", "supports": ["Magic3"]},
+    {"name":".bootcde","url":"magic3/bootloader.ts", "supports": ["Magic3"]}
   ],
   "sortorder": -10
 }
