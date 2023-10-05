@@ -62,41 +62,9 @@ function onFoundDeviceInfo(deviceId, deviceVersion) {
 
 // Called when we refresh the list of installed apps
 function onRefreshMyApps() {
-  /* if we're allowed to, send usage stats. We'll only
-  actually send if the data has changed */
-  sendUsageStats();
+
 }
 
-var submittedUsageInfo = "";
-/* Send usage stats to servers if it has changed */
-function sendUsageStats() {
-  if (!SETTINGS.sendUsageStats) return; // not allowed!
-  if (device.uid === undefined) return; // no data yet!
-  if (!device.appsInstalled.length) return; // no installed apps or disconnected
-  /* Work out what we'll send:
-  * A suitably garbled UID so we can avoid too many duplicates
-  * firmware version
-  * apps installed
-  * apps favourited
-  */
-  var usageInfo = `uid=${encodeURIComponent(device.uid)}&fw=${encodeURIComponent(device.version)}&apps=${encodeURIComponent(device.appsInstalled.map(a=>a.id).join(","))}&favs=${encodeURIComponent(SETTINGS.favourites.join(","))}`;
-  // Do a quick check for unchanged data to reduce server load
-  if (usageInfo != submittedUsageInfo) {
-    console.log("sendUsageStats: Submitting usage stats...");
-    var xmlhttp = new XMLHttpRequest();   // new HttpRequest instance
-    xmlhttp.open("POST", "https://banglejs.com/submit_app_stats.php", true /*async*/);
-    xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-    xmlhttp.onload = (e) => {
-      if (xmlhttp.readyState === 4)
-        console.log(`sendUsageStats (${xmlhttp.status}): ${xmlhttp.responseText}`);
-    };
-    xmlhttp.onerror = (e) => {
-      console.error("sendUsageStats ERROR: "+xmlhttp.statusText);
-    };
-    xmlhttp.send(usageInfo);
-    submittedUsageInfo = usageInfo;
-  }
-}
 
 var originalAppJSON = undefined;
 function filterAppsForDevice(deviceId) {
@@ -163,11 +131,6 @@ window.addEventListener('load', (event) => {
     <div class="column col-12">
     <div class="form-group">
       <label class="form-switch">
-        <input type="checkbox" id="usage_stats" ${SETTINGS.sendUsageStats?"checked":""}>
-        <i class="form-icon"></i> Send favourite and installed apps to banglejs.com<br/>
-          <small>For 'Sort by Installed/Favourited' functionality (see <a href="http://www.espruino.com/Privacy">privacy policy</a>)</small>
-      </label>
-      <label class="form-switch">
         <input type="checkbox" id="remember_device">
         <i class="form-icon"></i> Don't ask again
       </label>
@@ -175,12 +138,6 @@ window.addEventListener('load', (event) => {
     </div>
   </div>`;
   showPrompt("Which Bangle.js?",html,{},false);
-  var usageStats = document.getElementById("usage_stats");
-  usageStats.addEventListener("change",event=>{
-    console.log("Send Usage Stats "+(event.target.checked?"on":"off"));
-    SETTINGS.sendUsageStats = event.target.checked;
-    saveSettings();
-  });
   htmlToArray(document.querySelectorAll(".devicechooser")).forEach(button => {
     button.addEventListener("click",event => {
       let rememberDevice = !!document.getElementById("remember_device").checked;
@@ -277,16 +234,6 @@ window.addEventListener('load', (event) => {
     });
   }
 
-  // Sending usage stats
-  var selectUsageStats = document.getElementById("settings-usage-stats");
-  if (selectUsageStats) {
-    selectUsageStats.checked = !!SETTINGS.sendUsageStats;
-    selectUsageStats.addEventListener("change",event=>{
-      console.log("Send Usage Stats "+(event.target.checked?"on":"off"));
-      SETTINGS.sendUsageStats = event.target.checked;
-      saveSettings();
-    });
-  }
 
   // Load language list
   httpGet("lang/index.json").then(languagesJSON=>{
