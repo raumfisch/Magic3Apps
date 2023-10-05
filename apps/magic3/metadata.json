@@ -1,0 +1,24 @@
+{
+  "id": "main",
+  "name": "Main",
+  "tags": "tool,system",
+  "type": "bootloader",
+  "icon": "bootloader.png",
+  "version": "0.05",
+  "supports": ["Magic3"],
+  "description": "This loads the Bangle App execution emulation environment, drivers etc",
+  "storage": [
+    { "name": "main.js", "url": "main.ts" },
+    { "name": "lcd.js", "url": "lcd.ts" },
+    { "name": "accel.js", "url": "accel.ts" },
+    { "name": "accel_step.js", "url": "accel_step.ts" },
+    { "name": "cst716.js", "url": "cst716.ts" },
+    { "name": "setui.js", "url": "setui.ts" },
+    { "name": "menu.js", "url": "menu.ts" },
+    { "name": "prompt.js", "url": "prompt.ts" },
+    { "name": "locale", "url": "locale.ts" },
+    { "name": "widgets.js", "url": "widgets.ts" },
+    { "name": "gps.js", "url": "gps.ts" }
+  ],
+  "sortorder": -10
+}
